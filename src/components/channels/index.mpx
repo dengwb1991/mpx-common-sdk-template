@@ -1,0 +1,184 @@
+<!-- 
+  支付渠道组件
+ -->
+<template>
+  <view class="mf-channles">
+    <view class="title">
+      <text class="title-name">支付方式</text>
+    </view>
+
+    <view
+      class="channels row"
+      style="{{ style.item }}"
+      wx:for="{{ channelList }}"
+      wx:key="index"
+      bindtap="handleChange(item)"
+    >
+      <view class="left-label row">
+        <image class="icon" src="{{ item.icon }}"/>
+        <view class="channle-label row">
+          <text class="name">{{ item.name }}</text>
+          <!-- <text class="descriptive">文案描述文案描述</text> -->
+        </view>
+      </view>
+      <view class="right-label row">
+        <!-- <view class="preferential-wrap row">
+          <text class="preferential-text">全场减9.55元</text>
+        </view> -->
+        <view class="select-wrap row">
+          <image
+            class="selected-icon"
+            wx:if="{{ item.isLoading }}" src="{{ loading }}"/>
+          <view
+            class="unselected"
+            wx:elif="{{ item.selected === 0 }}"></view>
+          <view
+            class="selected row"
+            style="{{ style.selected }}"
+            wx:elif="{{ item.selected === 1 }}"
+          >
+            <image class="{{ style.selectedIcon ? 'out-selected-icon' : 'selected-icon' }}"  src="{{ style.selectedIcon ? style.selectedIcon : checked }}"/>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import { createComponent } from '@mpxjs/core'
+  import eventBus from '../../common/eventBus/index'
+  import eventCallback from '../../common/eventBus/eventCallback'
+  import { styleObjectToString } from '../../common/utils'
+  import { EVENT_ENUM } from '../../common/dataCenter/const'
+  import { IMG_MAP } from '../../assets/js/index'
+  createComponent({
+    data: {
+      checked: IMG_MAP.CHECKED,
+      loading: IMG_MAP.LOADING,
+      channelList: [],
+      style: {
+        item: '',
+        selected: '',
+        selectedIcon: ''
+      }
+    },
+    methods: {
+      handleChange (item) {
+        if (this.channelList.some(item => item.isLoading)) {
+          return
+        }
+        // 当前渠道处于不被选中 并且 允许被选中的状态时，触发changePayInfo
+        if (item.selected === 0 && item.can_select === 1) {
+          this.channelList = this.channelList.map(channel => {
+            return {
+              ...channel,
+              selected: 0,
+              isLoading: channel.channel_id === item.channel_id
+            }
+          })
+          eventBus.emit(EVENT_ENUM.CHANGE_PAY_INFO, {
+            'user_select': `{"channel_id":${item.channel_id},"payChannelDetails":[]}`,
+            'change_type': 3
+          })
+        }
+      }
+    },
+    ready () {
+      // 嵌入模式 每个组件通过eventBus获取支付信息
+      eventBus.on(EVENT_ENUM.GET_PAY_INFO_RES, res => {
+        try {
+          const { data, config } = res
+          const { channels = {} } = config.style || {}
+          this.style = {
+            selected: styleObjectToString(channels.selected),
+            item: styleObjectToString(channels.item),
+            selectedIcon: channels.selectedIcon
+          }
+
+          this.channelList = data.external_channel_list.module_data.display_list
+        } catch (e) {
+          console.log(e)
+        }
+      })
+      // 初始化
+      eventCallback.init()
+    }
+  })
+</script>
+
+<style lang="stylus">
+@import '../../assets/css/common.styl'
+
+.mf-channles
+  background-color #FFF
+  padding 16rpx 32rpx
+  .preferential-wrap
+    margin-right 8rpx
+  .preferential-text
+    font-family PingFangSC-Regular
+    font-size 20rpx
+    border 1rpx solid rgba(255, 67, 64, 0.4)
+    padding 2rpx 8rpx
+    color #FF4340	
+  .descriptive
+    padding-top 4rpx
+    font-family PingFangSC-Regular
+    font-size 20rpx
+    line-height 28rpx
+    color rgba(153, 153, 153, 0.6)	
+  .name
+    font-family PingFangSC-Regular
+    font-size 28rpx
+    color #000
+    line-height 36rpx
+  .channle-label
+    flex-direction column
+    align-items flex-start
+    padding-left 12rpx
+  .channels
+    justify-content space-between
+    padding 16rpx 0
+    box-sizing border-box
+  .channels:nth-of-type(2)
+    border-top none!important
+  .channels:last-of-type
+    border-bottom none!important
+  .out-selected-icon
+    width 32rpx
+    height 32rpx
+  .selected-icon
+    width 24rpx
+    height 24rpx
+  .unselected
+    width 32rpx
+    height 32rpx
+    border 1rpx solid #000
+    box-sizing border-box
+    transform scale(1)
+    border-radius 50%
+    opacity 0.3
+  .select-wrap
+    width 32rpx
+    height 32rpx
+    border-radius 50%
+    overflow hidden
+  .selected
+    width 32rpx
+    height 32rpx
+    background #5B6B92
+  .icon
+    width 36rpx
+    height 36rpx
+  .title
+    padding 16rpx 0
+  .title-name
+    font-family PingFangSC-Medium
+    font-size 32rpx
+    color #000
+</style>
+
+<script name="json">
+  const config = { component: true, usingComponents: {} };
+  module.exports = config;
+</script>

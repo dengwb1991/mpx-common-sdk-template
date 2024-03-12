@@ -1,0 +1,95 @@
+{
+  "errno": 0,
+  "data": {
+      "button_info": {
+          "module_type": "button",
+          "module_show_weight": null,
+          "display": 1,
+          "module_name": null,
+          "module_message": null,
+          "module_data": {
+              "button_list": null,
+              "display_button": {
+                  "payBtnText": "去支付",
+                  "actionType": 4,
+                  "buttonRemark": null,
+                  "buttonTips": null,
+                  "buttonStyle": null,
+                  "alias": "tansPay",
+                  "weight": null,
+                  "selected": 1,
+                  "payBtnSubText": null
+              },
+              "style": 1
+          }
+      },
+      "pay_channels": {
+          "module_type": null,
+          "module_show_weight": null,
+          "display": 0,
+          "module_name": null,
+          "module_message": null,
+          "module_data": "[{\"channel_id\":128,\"payChannelDetails\":[]}]"
+      },
+      "external_channel_list": {
+          "module_type": null,
+          "module_show_weight": null,
+          "display": 1,
+          "module_name": null,
+          "module_message": null,
+          "module_data": {
+              "fold_list": null,
+              "display_list": [
+                  {
+                      "discount_info": null,
+                      "cost": 12691,
+                      "level": null,
+                      "icon": "",
+                      "can_cancel": 1,
+                      "type": null,
+                      "can_select": 1,
+                      "deduction": null,
+                      "name": "支付宝支付",
+                      "marketing_text": "",
+                      "channel_id": 128,
+                      "selected": 1,
+                      "status": 1
+                  },
+                  {
+                      "discount_info": null,
+                      "cost": 0,
+                      "level": null,
+                      "icon": "",
+                      "can_cancel": 1,
+                      "type": null,
+                      "can_select": 1,
+                      "deduction": null,
+                      "name": "微信支付",
+                      "marketing_text": "",
+                      "channel_id": 127,
+                      "selected": 0,
+                      "status": 1
+                  },
+                  {
+                      "discount_info": null,
+                      "cost": 0,
+                      "level": null,
+                      "icon": "",
+                      "can_cancel": 1,
+                      "type": null,
+                      "can_select": 1,
+                      "deduction": null,
+                      "name": "银行卡支付",
+                      "marketing_text": "",
+                      "channel_id": 135,
+                      "selected": 0,
+                      "status": 1
+                  }
+              ]
+          }
+      },
+      "attach": null,
+      "_transfer": null
+  },
+  "errmsg": "ok"
+}

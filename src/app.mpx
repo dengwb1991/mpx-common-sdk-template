@@ -1,0 +1,34 @@
+<script>
+import mpx, { createApp } from '@mpxjs/core'
+import apiProxy from '@mpxjs/api-proxy'
+import fetch from '@mpxjs/fetch'
+mpx.use(apiProxy, { usePromise: true })
+mpx.use(fetch)
+
+createApp({
+  onPageNotFound () {
+    console.log('---------onPageNotFound---------')
+  },
+  onLaunch () {
+    console.log('---------onLaunch---------')
+  },
+  onShow () {
+    console.log('---------onShow---------')
+  },
+  onHide () {
+    console.log('---------onHide---------')
+  }
+})
+</script>
+
+<script type="application/json">
+{
+	"pages": [
+		"./pages/index/index"
+	]
+}
+</script>
+
+<style>
+  /*此处编写全局样式*/
+</style>

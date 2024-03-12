@@ -1,0 +1,125 @@
+<template>
+  <view class="examples">
+		<text>测试套件</text>
+    <mf-channels></mf-channels>
+    <br/>
+    <view
+      class="btn row"
+      bindtap="handleRefresh"
+    >刷新</view>
+    <br/>
+    <view
+      class="btn row"
+      bindtap="handlePay"
+    >发起支付</view>
+    <br/>
+    <view
+      class="btn row"
+      bindtap="handleJump"
+    >跳转</view>
+  </view>
+</template>
+
+<script>
+  import mpx, { createPage } from '@mpxjs/core'
+  import eventBus from '../../common/eventBus/index'
+  import Cashier from '../../main'
+  createPage({
+    data: {
+      cashier: null
+    },
+    onPageScroll () {
+    },
+    methods: {
+      handleRefresh () {
+        this.cashier.init({
+          'receipt_snapshot': '',
+        })
+        this.cashier.refresh()
+      },
+      handlePay () {
+        this.cashier.pay({
+          'order_identifier': '11'
+        })
+      },
+      handleJump () {
+        mpx.navigateTo({ url: '/pages/examples/main' })
+      }
+    },
+    onLoad () {
+      console.log('---------onLoad---------')
+      // function callback1(data, data2) {
+      //   console.log(`Callback 1: ${data}`, data2)
+      // }
+      // function callback2(data, data2) {
+      //   console.log(`Callback 2: ${data}`, data2)
+      // }
+      // eventBus.on('event1', callback1)
+      // eventBus.on('event1', callback2)
+      // eventBus.off('event1', callback1)
+      // setTimeout(() => {
+      //   eventBus.emit('event1', 'Hello', '2')
+
+      // }, 2000)
+      this.cashier = new Cashier({
+        options: {
+          'receipt_snapshot': '',
+          'template_id': 'ae446b7e0bd045bf',
+          'token': '',
+          'uid': '123456',
+          // sdkversion: '0.12.10',
+        },
+        config: {
+          env: 'production', // 请求环境 development preview production 默认为 production
+          'miniapp_env': 0, // 间联支付跳转至小程序环境 0:正式版 1:开发版 2:体验版 默认为0
+          style: {
+            channels: {
+              item: {
+                'border-bottom': '1rpx solid #ccc',
+                'padding': '24rpx 0'
+              },
+              selected: {
+                'background': 'transparent'
+              }
+            }
+          }
+        }
+      }, (data) => {
+        /**
+         * status = 'init' 初始化完成
+         * status = 'cancel' 用户取消支付
+         * status = 'payment' 发起支付中
+         * status = 'query' 支付结果查询中
+         * status = 'fail' 失败
+         * status = 'success' 成功
+         */
+        console.log(data)
+      })
+      this.cashier.show()
+    },
+    onReady () {
+      console.log('---------onReady---------')
+    }
+  })
+</script>
+<style lang="stylus" scoped>
+@import '../../assets/css/common.styl'
+.examples
+  height 100%
+  width 100%
+  background #ccc
+  .btn
+    font-size 34rpx
+    width 200rpx
+    height 60rpx
+    background #5B6B92
+    display flex
+    color #FFF
+</style>
+<script type="application/json">
+  {
+    "usingComponents": {
+      "mf-channels": "../../components/channels/index.mpx"
+    }
+  }
+</script>
