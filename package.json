@@ -4,6 +4,7 @@
   "description": "基于mpx开发通用sdk组件模板",
   "main": "index.js",
   "scripts": {
+    "lint:filenames": "node ./build/checkFilenames.js",
     "watch": "node ./build/build.js -w",
     "watch:wx": "npm run watch --mode=wx",
     "watch:web": "npm run watch --mode=web",
