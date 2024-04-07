@@ -1,6 +1,24 @@
 <template>
   <view class="examples">
-		<text>main</text>
+    <view class="sub-title">
+      <text>公共组件测试</text>
+    </view>
+    <mf-popup
+      wx:ref="popup"
+      bindtoggle="toggle"
+    >
+      <view class="popup-content">
+        <text>Popup</text>
+        <view
+          class="btn row"
+          bindtap="handleHidePopup"
+        >Popup - hide</view>
+      </view>
+    </mf-popup>
+    <view
+      class="btn row"
+      bindtap="handleShowPopup"
+    >Popup - show</view>
     <view
       class="btn row"
       bindtap="handleBack"
@@ -13,11 +31,20 @@
   createPage({
     data: {
     },
-    onPageScroll () {
-    },
+    // onPageScroll () {
+    // },
     methods: {
       handleBack () {
         mpx.navigateBack()
+      },
+      handleShowPopup () {
+        this.$refs.popup.show()
+      },
+      handleHidePopup () {
+        this.$refs.popup.hide()
+      },
+      toggle (e) {
+        console.log(e)
       }
     },
     onLoad () {
@@ -29,10 +56,32 @@
   })
 </script>
 <style lang="stylus" scoped>
+@import '../../assets/css/common.styl'
+
+.examples
+  text-align center
+  padding 40rpx
+  .btn
+    height 96rpx
+    width 100%
+    border-radius 16rpx
+    background #092847
+    font-size 32rpx
+    font-family PingFangSC-Regular
+    color #FFF
+    margin 20rpx 0
+  .sub-title
+    font-size 48rpx
+    font-weight bold
+    padding-bottom 40rpx
+  
+.popup-content
+  background-color #FFF
 </style>
 <script type="application/json">
   {
     "usingComponents": {
+      "mf-popup": "../../common-components/popup/index.mpx"
     }
   }
 </script>

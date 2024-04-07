@@ -1,0 +1,39 @@
+vendors = official
+
+$popup-z-index := 1000
+$popup-mask-opacity := 0.4 // 遮罩透明度
+$popup-default-animation-time := 0.3s // 默认动画时间
+$popup-mask-background := rgba(37, 38, 45, 0.4) // 遮罩背景
+
+
+popup-transition($name, $time = $popup-default-animation-time, $ease = ease)
+  animation $name $time $ease both
+
+@keyframes popup-root-hide {
+  0% {
+    transform: translateX(0)
+  }
+  99% {
+    transform: translateX(0)
+  }
+  100% {
+    transform: translateX(-100%)
+  }
+}
+@keyframes popup-move-up-show {
+  from {
+    transform: translateY(100%)
+  }
+  to {
+    transform: translateY(0)
+  }
+}
+
+@keyframes popup-move-up-hide {
+  from {
+    transform: translateY(0)
+  }
+  to {
+    transform: translateY(100%)
+  }
+}

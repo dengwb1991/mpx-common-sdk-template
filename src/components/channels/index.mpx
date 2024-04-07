@@ -84,7 +84,7 @@
         }
       }
     },
-    ready () {
+    created () {
       // 嵌入模式 每个组件通过eventBus获取支付信息
       eventBus.on(EVENT_ENUM.GET_PAY_INFO_RES, res => {
         try {

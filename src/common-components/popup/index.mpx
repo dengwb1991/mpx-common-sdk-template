@@ -1,0 +1,98 @@
+<!--
+  popup 弹出层组件
+-->
+<template>
+  <view
+    class="mf-popup mf-popup-transition {{visibleClass}}"
+    catchtouchmove@wx|ali
+  >
+    <view
+      wx:if="{{isMask}}"
+      bindtouchmove="preventTouchMove"
+      class="mf-popup-mask"></view>
+    <view class="mf-popup-content">
+      <slot></slot>
+    </view>
+  </view>
+</template>
+
+<script>
+import { createComponent } from '@mpxjs/core'
+import { visibilityMixin } from '../../mixins'
+
+createComponent({
+  mixins: [visibilityMixin],
+  properties: {
+    isMask: { // 是否展示遮罩
+      type: Boolean,
+      value: true
+    },
+  },
+  data: {
+    visibleClass: ''
+  },
+  methods: {
+    preventTouchMove (event) {
+      event.preventDefault && event.preventDefault()
+    },
+    show () {
+      this.isVisible = true
+      this.visibleClass = 'mf-popup-show'
+    },
+    hide () {
+      this.isVisible = false
+      this.visibleClass = 'mf-popup-hide'
+    }
+  }
+})
+</script>
+
+<style lang="stylus">
+@import '../../assets/css/popup-transition.styl'
+
+.mf-popup
+  position fixed
+  left 0
+  right 0
+  top 0
+  bottom 0
+  z-index $popup-z-index
+  display flex
+  height 100%
+  flex-direction column-reverse
+  transform translateX(-100%)
+  .mf-popup-content
+    width 100%
+    pointer-events auto
+    z-index $popup-z-index + 1
+  .mf-popup-mask
+    position absolute
+    left 0
+    top 0
+    width 100%
+    height 100%
+    opacity 0
+    z-index $popup-z-index
+    pointer-events none
+    background-color $popup-mask-background
+    transition opacity .2s ease
+  &.mf-popup-show
+    transform translateX(0)
+    .mf-popup-content
+      popup-transition(popup-move-up-show)
+    .mf-popup-mask
+      opacity $popup-mask-opacity
+  &.mf-popup-hide
+    transform translateX(-100%)
+    &.mf-popup-transition
+      popup-transition(popup-root-hide)
+    .mf-popup-content
+      popup-transition(popup-move-up-hide)
+    .mf-popup-mask
+      opacity 0
+</style>
+
+<script name="json">
+  const config = { component: true, usingComponents: {} };
+  module.exports = config;
+</script>
