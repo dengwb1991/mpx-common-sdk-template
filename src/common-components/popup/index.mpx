@@ -3,6 +3,7 @@
 -->
 <template>
   <view
+    wx:if="{{ isVisible }}"
     class="mf-popup mf-popup-transition {{visibleClass}}"
     catchtouchmove@wx|ali
   >
@@ -40,7 +41,9 @@ createComponent({
       this.visibleClass = 'mf-popup-show'
     },
     hide () {
-      this.isVisible = false
+      setTimeout(() => {
+        this.isVisible = false
+      }, 300)
       this.visibleClass = 'mf-popup-hide'
     }
   }
