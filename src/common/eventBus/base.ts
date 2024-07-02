@@ -10,7 +10,7 @@ import {
   EVENT_ENUM
 } from '../dataCenter/const'
 /**
- *  示例：
+ *  示例：支持先emit 后on
     function callback1(data, data2) {
       console.log(`Callback 1: ${data}`, data2)
     }
@@ -23,7 +23,8 @@ import {
     eventBus.emit('event1', 'Hello', '2')
  */
 export default class Base {
-  private _events: PlainObject = []
+  private _events: PlainObject = {} // 所有绑定事件
+  private _queue: PlainObject = {} // 用于存储 还未监听且提前派发的任务，先emit 后on
   public timer: any
   constructor () {
     this.timer = null
@@ -36,6 +37,7 @@ export default class Base {
       this._events[event] = []
     }
     this._events[event].push(callback)
+    this.actionQueue(event, callback)
   }
   /**
    * 同事件绑定一次
@@ -67,12 +69,32 @@ export default class Base {
   public emit (event: string, ...args: any[]) {
     const listenerList = this._events[event]
     if (!listenerList) {
+      this.setQueue(event, ...args)
       return true
     }
     /**
      * callback(...args) == callback.apply(null, args)
      */
     this._events[event].forEach((callback: Func) => callback(...args))
+  }
+  /**
+   * 将提前触发(emit)的任务插入队列中，等待被执行，若执行后500毫秒后被销毁
+   */
+  private setQueue (event: string, ...args: any[]) {
+    this._queue[event] = (callback: Func) => {
+      callback(...args)
+      setTimeout(() => {
+        this._queue[event] = null
+      }, 500)
+    }
+  }
+  /**
+   * 执行队列中的任务
+   */
+  private actionQueue (event: string, callback: Func) {
+    if (this._queue[event]) {
+      this._queue[event](callback)
+    }
   }
   /**
    * 函数延迟循环
