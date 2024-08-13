@@ -31,9 +31,9 @@ class Cashier {
   public hide () {
   }
   private initEvents () {
-    eventBus.on(EVENT_ENUM.CALLBACK, ({ status, errno, errmsg, from }) => {
+    eventBus.once(EVENT_ENUM.CALLBACK, ({ status, errno, errmsg, from }) => {
       this.callback({ status, errno, errmsg, from })
-    })
+    }, 1)
   }
 }
 

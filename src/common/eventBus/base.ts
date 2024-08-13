@@ -9,6 +9,9 @@ import {
   LOOPSPACE,
   EVENT_ENUM
 } from '../dataCenter/const'
+interface CallbackWithID extends Func {
+  id?: number
+}
 /**
  *  示例：支持先emit 后on
     function callback1(data, data2) {
@@ -40,19 +43,18 @@ export default class Base {
     this.actionQueue(event, callback)
   }
   /**
-   * 同事件绑定一次
+   * 同事件绑定一次 id在events内唯一
    */
-  public once (event: string, callback: Func) {
-    const wrapper = (...args: any[]) => {
-      callback(...args)
-      this.off(event, wrapper)
-    }
+  public once (event: string, callback: Func, id: number) {
+    const wrapper = (...args: any[]) => callback(...args)
+    wrapper.id = id
+    this.off(event, wrapper)
     this.on(event, wrapper)
   }
   /**
    * 不传 callback 时，默认情况当前所有的 event
    */
-  public off (event: string, callback: Func) {
+  public off (event: string, callback: CallbackWithID) {
     const listenerList = this._events[event]
     if (!listenerList) {
       return true
@@ -60,7 +62,7 @@ export default class Base {
     if (!callback) {
       this._events[event] = []
     } else {
-      this._events[event] = listenerList.filter((cb: Func) => cb !== callback)
+      this._events[event] = listenerList.filter((cb: CallbackWithID) => (cb !== callback && cb.id !== callback.id))
     }
   }
   /**
